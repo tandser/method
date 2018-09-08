@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.tandser.method.mapper.FibonacciMapper">
+
+    <cache type="org.mybatis.caches.ignite.IgniteCacheAdapter"/>
+
+    <select id="getVal" parameterType="java.lang.Integer" resultType="ru.tandser.method.dto.Fibonacci" useCache="true">
+        SELECT * FROM fibonacci WHERE n = #{n}
+    </select>
+
+    <select id="getN" parameterType="java.lang.Long" resultType="ru.tandser.method.dto.Fibonacci" useCache="true">
+        SELECT * FROM fibonacci WHERE val = #{val};
+    </select>
+
+    <insert id="put">
+        INSERT INTO fibonacci (n, val) VALUES (#{n}, #{val});
+    </insert>
+
+</mapper>

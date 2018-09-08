@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/cache
+                           http://www.springframework.org/schema/cache/spring-cache.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <cache:annotation-driven/>
+
+    <context:property-placeholder location="classpath:properties/datasource.properties"/>
+
+    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
+        <property name="driverClassName" value="${local.driverClassName}"/>
+        <property name="url"             value="${local.url}"/>
+        <property name="username"        value="${local.username}"/>
+        <property name="password"        value="${local.password}"/>
+    </bean>
+
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <property name="baselineOnMigrate" value="true"/>
+        <property name="locations"         value="classpath:sql"/>
+        <property name="dataSource"        ref="dataSource"/>
+    </bean>
+
+    <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+        <property name="gridLogger">
+            <bean class="org.apache.ignite.logger.slf4j.Slf4jLogger"/>
+        </property>
+        <property name="clientMode"              value="false"/>
+        <property name="peerClassLoadingEnabled" value="false"/>
+        <property name="igniteInstanceName"      value="testGrid"/>
+        <property name="cacheConfiguration">
+            <list>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name"              value="myBatisCache"/>
+                    <property name="cacheMode"         value="PARTITIONED"/>
+                    <property name="backups"           value="1"/>
+                    <property name="statisticsEnabled" value="true"/>
+                </bean>
+            </list>
+        </property>
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <value>127.0.0.1:47500..47509</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cacheManager" class="org.apache.ignite.cache.spring.SpringCacheManager">
+        <property name="configuration" ref="ignite.cfg"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource"      ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:ru/tandser/method/mapper/*Mapper.xml"/>
+    </bean>
+
+    <bean id="fibonacciMapper" autowire="byName" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface"   value="ru.tandser.method.mapper.FibonacciMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="fibonacciDao" class="ru.tandser.method.dao.FibonacciDaoImpl">
+        <constructor-arg ref="fibonacciMapper"/>
+    </bean>
+
+    <bean id="fibonacciSolver" class="ru.tandser.method.service.FibonacciSolverImpl"/>
+
+</beans>
