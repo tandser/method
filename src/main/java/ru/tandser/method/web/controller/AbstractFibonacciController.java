@@ -1,10 +1,14 @@
 package ru.tandser.method.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.tandser.method.dao.FibonacciDao;
 import ru.tandser.method.dto.Fibonacci;
 import ru.tandser.method.service.FibonacciSolver;
 
 public class AbstractFibonacciController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractFibonacciController.class);
 
     private FibonacciDao    fibonacciDao;
     private FibonacciSolver fibonacciSolver;
@@ -14,8 +18,10 @@ public class AbstractFibonacciController {
         this.fibonacciSolver = fibonacciSolver;
     }
 
-    public Fibonacci getVal(Integer n) {
-        Fibonacci fibonacci = fibonacciDao.getVal(n);
+    public Fibonacci get(Integer n) {
+        Fibonacci fibonacci = fibonacciDao.get(n);
+
+        logger.info("n = {}, fibonacci = {}", n, fibonacci);
 
         if (fibonacci == null || fibonacci.getVal() == null) {
             Long val = fibonacciSolver.solve(n);
@@ -26,9 +32,5 @@ public class AbstractFibonacciController {
         }
 
         return fibonacci;
-    }
-
-    public Fibonacci getN(Long val) {
-        return fibonacciDao.getN(val);
     }
 }

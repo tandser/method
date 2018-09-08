@@ -1,5 +1,6 @@
 package ru.tandser.method.dao;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import ru.tandser.method.dto.Fibonacci;
 import ru.tandser.method.mapper.FibonacciMapper;
@@ -14,13 +15,8 @@ public class FibonacciDaoImpl implements FibonacciDao {
     }
 
     @Override
-    public Fibonacci getVal(Integer n) {
-        return fibonacciMapper.getVal(n);
-    }
-
-    @Override
-    public Fibonacci getN(Long val) {
-        return fibonacciMapper.getN(val);
+    public Fibonacci get(Integer n) {
+        return fibonacciMapper.get(n);
     }
 
     @Override

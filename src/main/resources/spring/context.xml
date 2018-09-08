@@ -41,7 +41,7 @@
                     <property name="name"              value="myBatisCache"/>
                     <property name="cacheMode"         value="PARTITIONED"/>
                     <property name="backups"           value="1"/>
-                    <property name="statisticsEnabled" value="true"/>
+                    <property name="statisticsEnabled" value="false"/>
                 </bean>
             </list>
         </property>

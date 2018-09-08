@@ -4,9 +4,7 @@ import ru.tandser.method.dto.Fibonacci;
 
 public interface FibonacciDao {
 
-    Fibonacci getVal(Integer n);
-
-    Fibonacci getN(Long val);
+    Fibonacci get(Integer n);
 
     void put(Fibonacci fibonacci);
 }

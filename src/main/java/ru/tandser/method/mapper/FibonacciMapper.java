@@ -6,9 +6,7 @@ import ru.tandser.method.dto.Fibonacci;
 @Mapper
 public interface FibonacciMapper {
 
-    Fibonacci getVal(Integer n);
-    
-    Fibonacci getN(Long val);
-    
+    Fibonacci get(Integer n);
+
     void put(Fibonacci fibonacci);
 }

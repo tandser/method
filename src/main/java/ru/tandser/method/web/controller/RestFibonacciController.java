@@ -24,22 +24,11 @@ public class RestFibonacciController extends AbstractFibonacciController {
     }
 
     @Override
-    @GetMapping(produces = APPLICATION_JSON_VALUE, params = "!val")
-    public Fibonacci getVal(@RequestParam Integer n) {
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    public Fibonacci get(@RequestParam Integer n) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        Fibonacci result = super.getVal(n);
-        stopWatch.stop();
-        logger.info("duration = {} ms", stopWatch.getTotalTimeMillis());
-        return result;
-    }
-
-    @Override
-    @GetMapping(produces = APPLICATION_JSON_VALUE, params = "!n")
-    public Fibonacci getN(@RequestParam Long val) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        Fibonacci result = super.getN(val);
+        Fibonacci result = super.get(n);
         stopWatch.stop();
         logger.info("duration = {} ms", stopWatch.getTotalTimeMillis());
         return result;

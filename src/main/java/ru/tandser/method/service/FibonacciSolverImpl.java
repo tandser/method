@@ -1,8 +1,11 @@
 package ru.tandser.method.service;
 
+import org.springframework.cache.annotation.Cacheable;
+
 public class FibonacciSolverImpl implements FibonacciSolver {
 
     @Override
+    @Cacheable("fibonacciSolve")
     public Long solve(Integer n) {
         long x = 1;
         long y = 0;
